@@ -187,7 +187,7 @@
 
   // ---- Featured upcoming event: Register button on/off switch ----
   // Set this to false to hide the Register button on the featured event.
-  const SHOW_REGISTER_BUTTON = true;
+  const SHOW_REGISTER_BUTTON = false;
   const eventRegisterBtn = document.getElementById('eventRegisterBtn');
   if(eventRegisterBtn && !SHOW_REGISTER_BUTTON){
     eventRegisterBtn.style.display = 'none';
