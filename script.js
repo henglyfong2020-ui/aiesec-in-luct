@@ -2,6 +2,12 @@
   const siteHeader = document.getElementById('siteHeader');
   let lastY = window.scrollY;
   window.addEventListener('scroll', () => {
+    // while the mobile menu is open, the background page is locked via
+    // body{position:fixed}, and setting that alone can make the browser fire
+    // a scroll event with scrollY reset to 0 as a side effect — ignore scroll
+    // events entirely during that lock so the header's white/transparent
+    // state doesn't get wiped out by that phantom event
+    if(document.body.classList.contains('menu-open')) return;
     const y = window.scrollY;
     siteHeader.classList.toggle('scrolled', y > 60);
     if(y > lastY && y > 160){
@@ -15,22 +21,44 @@
   // mobile menu
   const hamburgerBtn = document.getElementById('hamburgerBtn');
   const mobileMenu = document.getElementById('mobileMenu');
-  hamburgerBtn.addEventListener('click', () => {
-    const isOpen = mobileMenu.classList.toggle('open');
-    hamburgerBtn.classList.toggle('open', isOpen);
+  let savedScrollY = 0;
+
+  function openMobileMenu(){
+    savedScrollY = window.scrollY;
     // keep the header in its light "scrolled" look while the menu is open,
-    // so the hamburger icon stays visible against the white panel behind it
-    if(isOpen){
-      siteHeader.classList.add('scrolled');
-    } else {
-      siteHeader.classList.toggle('scrolled', window.scrollY > 60);
-    }
-  });
-  document.querySelectorAll('.mnav').forEach(a => a.addEventListener('click', () => {
+    // so the hamburger icon stays visible against the white panel behind it,
+    // and so the menu's fixed top offset always matches the header's height
+    siteHeader.classList.add('scrolled');
+    // lock the background page in place — position:fixed at the exact scroll
+    // offset is the reliable cross-browser way to stop scrolling (including
+    // iOS Safari, where overflow:hidden alone doesn't fully block touch-scroll)
+    document.body.style.top = `-${savedScrollY}px`;
+    document.body.classList.add('menu-open');
+    mobileMenu.classList.add('open');
+    hamburgerBtn.classList.add('open');
+  }
+
+  function closeMobileMenu(){
     mobileMenu.classList.remove('open');
     hamburgerBtn.classList.remove('open');
-    siteHeader.classList.toggle('scrolled', window.scrollY > 60);
-  }));
+    document.body.classList.remove('menu-open');
+    document.body.style.top = '';
+    // restore the exact scroll position, instantly (no smooth animation) so
+    // the page doesn't visibly jump/animate back into place — explicitly
+    // forcing "instant" here because the site's global scroll-behavior:smooth
+    // (used for anchor links) would otherwise animate this too
+    window.scrollTo({ top: savedScrollY, left: 0, behavior: 'instant' });
+    siteHeader.classList.toggle('scrolled', savedScrollY > 60);
+  }
+
+  hamburgerBtn.addEventListener('click', () => {
+    if(mobileMenu.classList.contains('open')){
+      closeMobileMenu();
+    } else {
+      openMobileMenu();
+    }
+  });
+  document.querySelectorAll('.mnav').forEach(a => a.addEventListener('click', closeMobileMenu));
 
   // scroll reveal
   const revealEls = document.querySelectorAll('.reveal');
