@@ -193,26 +193,79 @@
     eventRegisterBtn.style.display = 'none';
   }
 
-  // ---- Contact form: route to the right inbox based on Interest, without exposing addresses in the page source ----
-  const CF_ROUTES = {
-    membership: 'bWFyYWR5LnJvdTFAYWllc2VjLm5ldA==',
-    exchange: 'bW9uaXJvc2EudG9AYWllc2VjLm5ldCx2YW5ueWRlbi5uaW0xQGFpZXNlYy5uZXQ=',
-    partnership: 'a2ltc3Vhci50cnlAYWllc2VjLm5ldA==',
-    events: 'bW9ueXJldGguY2hob3JkYTFAYWllc2VjLm5ldA==',
-    other: 'bHlmb25nLmhlbmdAYWllc2VjLm5ldA=='
-  };
+  // ---- Contact form ----
+  // This form does NOT contain, encode, or expose any recipient email
+  // addresses, API keys, or credentials anywhere in this file. Category ->
+  // recipient routing is handled entirely server-side by a Cloudflare Worker.
+  // This script only collects the form fields and POSTs them as JSON.
+  //
+  // SETUP: replace the placeholder URL below with your deployed Worker's URL
+  // once it exists (see cloudflare-worker-example.js for the backend).
+  const CONTACT_API_ENDPOINT = 'https://YOUR-WORKER-SUBDOMAIN.workers.dev/api/contact';
+
   const contactForm = document.getElementById('contactForm');
+  const cfSubmitBtn = document.getElementById('cfSubmitBtn');
+  const cfStatus = document.getElementById('cfStatus');
+  const cfSubmitBtnDefaultText = cfSubmitBtn ? cfSubmitBtn.textContent : '';
+
+  function setStatus(message, type){
+    if(!cfStatus) return;
+    cfStatus.textContent = message;
+    cfStatus.className = 'form-status show' + (type ? ' ' + type : '');
+  }
+  function clearStatus(){
+    if(!cfStatus) return;
+    cfStatus.textContent = '';
+    cfStatus.className = 'form-status';
+  }
+
   if(contactForm){
-    contactForm.addEventListener('submit', (e) => {
+    contactForm.addEventListener('submit', async (e) => {
       e.preventDefault();
-      const name = document.getElementById('cf-name').value.trim();
-      const email = document.getElementById('cf-email').value.trim();
-      const interest = document.getElementById('cf-interest').value;
-      const message = document.getElementById('cf-message').value.trim();
-      const to = atob(CF_ROUTES[interest] || CF_ROUTES.other);
-      const subject = encodeURIComponent(`AIESEC in LUCT — ${document.getElementById('cf-interest').selectedOptions[0].text} Inquiry`);
-      const body = encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\n${message}`);
-      window.location.href = `mailto:${to}?subject=${subject}&body=${body}`;
+
+      const nameField = document.getElementById('cf-name');
+      const emailField = document.getElementById('cf-email');
+      const interestField = document.getElementById('cf-interest');
+      const messageField = document.getElementById('cf-message');
+
+      const name = nameField.value.trim();
+      const email = emailField.value.trim();
+      const category = interestField.value;
+      const categoryLabel = interestField.selectedOptions[0].text;
+      const message = messageField.value.trim();
+
+      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if(!name || !email || !message){
+        setStatus('Please fill in all fields before sending.', 'error');
+        return;
+      }
+      if(!emailPattern.test(email)){
+        setStatus('Please enter a valid email address.', 'error');
+        return;
+      }
+
+      if(cfSubmitBtn.disabled) return;
+      cfSubmitBtn.disabled = true;
+      cfSubmitBtn.textContent = 'Sending…';
+      clearStatus();
+
+      try{
+        const response = await fetch(CONTACT_API_ENDPOINT, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, email, category, categoryLabel, message })
+        });
+
+        if(!response.ok) throw new Error('Request failed with status ' + response.status);
+
+        setStatus('Thank you! Your message has been sent successfully.', 'success');
+        contactForm.reset();
+      } catch(err){
+        setStatus('Something went wrong. Please try again later.', 'error');
+      } finally{
+        cfSubmitBtn.disabled = false;
+        cfSubmitBtn.textContent = cfSubmitBtnDefaultText;
+      }
     });
   }
 
