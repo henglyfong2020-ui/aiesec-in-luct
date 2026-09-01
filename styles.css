@@ -148,11 +148,18 @@
   .hamburger.open span:nth-child(2){opacity:0;}
   .hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
 
+  /* scroll lock while the mobile menu is open — body is pinned in place via JS
+     (position:fixed + top offset), this just guarantees no scrollbar/overflow
+     shows in browsers that support it as a fallback */
+  body.menu-open{position:fixed;width:100%;overflow:hidden;left:0;right:0;}
+
   .mobile-menu{
     position:fixed;inset:68px 0 0 0;background:var(--white);z-index:99;padding:30px;
     opacity:0;visibility:hidden;transform:translateY(-16px);
     transition:opacity .32s ease, transform .32s ease, visibility 0s linear .32s;
     pointer-events:none;
+    overflow-y:auto;
+    -webkit-overflow-scrolling:touch;
   }
   .mobile-menu.open{
     opacity:1;visibility:visible;transform:translateY(0);
@@ -618,6 +625,18 @@
     outline:none;border-bottom-color:var(--orange);
   }
   .field textarea{resize:vertical;min-height:90px;}
+
+  /* contact form status message (success/error) — shown after submit */
+  .form-status{
+    margin-top:16px;font-size:13px;font-weight:600;
+    opacity:0;transform:translateY(-4px);
+    transition:opacity .3s ease, transform .3s ease;
+  }
+  .form-status.show{opacity:1;transform:translateY(0);}
+  .form-status.success{color:var(--black);}
+  .form-status.error{color:var(--orange);}
+  .btn[disabled]{opacity:0.6;cursor:not-allowed;pointer-events:none;}
+
   .contact-info{display:flex;flex-direction:column;gap:26px;}
   .contact-info .ci-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--orange);margin-bottom:6px;}
   .contact-info .ci-val{font-family:var(--display);font-size:19px;}
