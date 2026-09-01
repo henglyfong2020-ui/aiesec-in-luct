@@ -366,7 +366,7 @@
     <div class="story-split reveal">
       <div class="ph video-ph" data-ph="Exchange Participant">
   <video class="ph-video" autoplay muted loop playsinline preload="metadata">
-    <source src="EPVid/EPVid1.mp4" type="video/mp4">
+    <source src="EPVId/EPVid1.mp4" type="video/mp4">
   </video>
   <button class="mute-toggle" id="featuredVideoMute" type="button" aria-label="Unmute video">🔇</button>
   <div class="cap">Takaaki, Global Volunteer — Cambodia</div>
@@ -1329,12 +1329,11 @@ I’m truly grateful for all the experiences, lessons, friendships, and memories
 
         <div class="story-card">
           <div class="ph"
-               data-ph="SOKHASAKPHEA LUN"
-               style="background-image:url('RPRE/MM3.webp');background-size:cover;background-position:center 50%;">
+               data-ph="Member"
+               style="background-image:url('RPRE/MM3.webp');background-size:cover;background-position:center 30%;">
           </div>
-          <p class="q">"After completing one semester in AIESEC, the biggest shift wasn’t just in my skills. It was in how I see myself. Things that used to terrify me became part of my everyday task such as reaching out to people, doing cold calls, and facing many rejections. Not only have I gained insight in what my function does but I’ve developed a lot of soft skills which is beneficial for my daily life and my future career. AIESEC gave me a space full of opportunities where I could fail, grow, and come back stronger.<br><br>
-There’s still a lot for me to learn and grow but I will keep on improving."</p>
-          <p class="who">Sokhasakphea Lun, Business & Product Development, Team Member</p>
+          <p class="q">"I found my people, and then I found my purpose."</p>
+          <p class="who">Lida Buch, Incoming Global Volunteer, Team Leader</p>
         </div>
 
       </div>
@@ -1419,13 +1418,11 @@ AIESEC is a community of open-minded, supportive people who grow, learn, and emp
 
         <div class="story-card">
           <div class="ph"
-               data-ph="LYFONG HENG"
-               style="background-image:url('RPRE/LD1.webp');background-size: 100%;background-position: 50% 40%;">
+               data-ph="Leadership"
+               style="background-image:url('RPRE/LD1.webp');background-size:cover;background-position:center;">
           </div>
-          <p class="q">"Being the Local Committee President of AIESEC in LUCT has been one of the most challenging yet meaningful experiences of my journey. I came into this role with many expectations, but I quickly learned that leadership is not just about achieving results—it is about understanding people, making difficult decisions, and growing together.<br><br>
-Throughout this journey, I faced moments of uncertainty while balancing AIESEC with my other responsibilities. Those challenges taught me to become more patient, resilient, and responsible. I learned that I don't always need to have all the answers; sometimes, leadership is simply about listening, learning, and having the courage to keep moving forward.<br><br>
-To anyone thinking about taking a leadership role, don't wait until you feel ready. Take the opportunity, embrace the challenges, and allow yourself to grow. You might discover a version of yourself you never knew existed."</p>
-          <p class="who">Lyfong Heng, Local Committee President</p>
+          <p class="q">"xxxxxxxxxxxxxxxxxxxxxxxx"</p>
+          <p class="who">Dara Chan, President</p>
         </div>
 
         <div class="story-card">
@@ -1442,12 +1439,11 @@ To anyone thinking about taking a leadership role, don't wait until you feel rea
 
         <div class="story-card">
           <div class="ph"
-               data-ph="LYZA THINA"
-               style="background-image:url('RPRE/LD3.webp');background-size: 140%;background-position:center;">
+               data-ph="Leadership"
+               style="background-image:url('RPRE/LD3.webp');background-size:cover;background-position:center;">
           </div>
-          <p class="q">"My journey in AIESEC gave me the opportunity to meet new people, work as part of a team, and step outside my comfort zone. It is like a bittersweet experience for me as not everything happens beautifully as I have imagined. However, what made the experience truly special was the people I met along the way.<br><br>
-            By working together, helping each other, laughing during difficult moments, and celebrating our small achievements created memories that I will never forget. Lastly, seeing everyone around me grow and have good experiences has honestly been one of the most rewarding parts of my journey."</p>
-          <p class="who">Lyza Thina, LCVP Finance & Legality</p>
+          <p class="q">"The hardest part of leading is staying consistent when no one's watching."</p>
+          <p class="who">Vichet Ros, VP Business Development</p>
         </div>
 
       </div>
@@ -1627,7 +1623,7 @@ To anyone thinking about taking a leadership role, don't wait until you feel rea
         </div>
       </div>
 
-      <form id="contactForm">
+      <form id="contactForm" novalidate>
         <div class="field"><label>Name</label><input type="text" id="cf-name" placeholder="Your full name" required></div>
         <div class="field"><label>Email</label><input type="email" id="cf-email" placeholder="you@email.com" required></div>
         <div class="field">
@@ -1641,7 +1637,8 @@ To anyone thinking about taking a leadership role, don't wait until you feel rea
           </select>
         </div>
         <div class="field"><label>Message</label><textarea id="cf-message" placeholder="Tell us a bit about what you're looking for..." required></textarea></div>
-        <button type="submit" class="btn btn-primary">Send Message →</button>
+        <button type="submit" class="btn btn-primary" id="cfSubmitBtn">Send Message →</button>
+        <p class="form-status" id="cfStatus" role="status" aria-live="polite"></p>
       </form>
     </div>
   </div>
