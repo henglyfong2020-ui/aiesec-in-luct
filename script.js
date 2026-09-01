@@ -369,3 +369,41 @@
       muteBtn.setAttribute('aria-label', video.muted ? 'Unmute video' : 'Mute video');
     });
   });
+
+  // ---- smooth in-page navigation (nav links, hero/CTA buttons, footer links, etc.) ----
+  // Browsers force scroll-behavior:smooth to become instant whenever the
+  // visitor's OS has "Reduce Motion" turned on — a deliberate accessibility
+  // override with no CSS way around it. This animates the scroll manually in
+  // JS instead, so clicking any in-page link always scrolls smoothly.
+  function smoothScrollToId(id, duration){
+    const target = document.getElementById(id);
+    if(!target) return;
+    const headerOffset = 100; // matches this site's existing scroll-margin-top
+    const startY = window.scrollY;
+    const targetY = target.getBoundingClientRect().top + window.scrollY - headerOffset;
+    const distance = targetY - startY;
+    if(Math.abs(distance) < 1) return;
+    const startTime = performance.now();
+
+    function step(now){
+      const elapsed = now - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      // ease-in-out-cubic — smooth acceleration and deceleration, not linear
+      const eased = progress < 0.5
+        ? 4 * progress * progress * progress
+        : 1 - Math.pow(-2 * progress + 2, 3) / 2;
+      window.scrollTo(0, startY + distance * eased);
+      if(progress < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+
+  document.querySelectorAll('a[href^="#"]').forEach(link => {
+    const id = link.getAttribute('href').slice(1);
+    if(!id) return; // skip bare "#" placeholder links (e.g. footer social icons)
+    if(!document.getElementById(id)) return; // skip links with no matching section on the page
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      smoothScrollToId(id, 600);
+    });
+  });
