@@ -193,6 +193,7 @@ body{
   .mobile-menu li:nth-child(8) .mnav{transition-delay:.33s;}
   .mobile-menu li:nth-child(9) .mnav{transition-delay:.37s;}
   .mobile-menu li:nth-child(10) .mnav{transition-delay:.41s;}
+  .mobile-menu li:nth-child(11) .mnav{transition-delay:.45s;}
 
   /* ================= HERO ================= */
   .hero{
@@ -496,6 +497,7 @@ body{
     border:1px solid var(--black);
   }
   .event-feature .ph{height:100%;min-height:380px;}
+  .event-feature-img{background-size:cover;}
   .event-feature-body{
     padding:48px 44px;background:var(--black);color:var(--white);
     display:flex;flex-direction:column;justify-content:center;
@@ -507,6 +509,15 @@ body{
   @media (max-width: 760px){
     .event-feature{grid-template-columns:1fr;}
     .event-feature .ph{min-height:260px;}
+  }
+  @media (max-width: 620px){
+    /* the "COMING SOON" text is baked into the image itself — cover crops
+       it off the sides on narrow screens, so switch to contain here so the
+       full graphic (and its text) is always visible, letterboxed on a dark
+       fill instead of being cut off. background-color is set explicitly
+       because the inline background-image on this element overrides the
+       .ph class's own gradient background entirely. */
+    .event-feature-img{background-size:contain;background-repeat:no-repeat;background-color:#171717;}
   }
 
   /* ---- term vision ---- */
@@ -684,6 +695,7 @@ body{
   @media (max-width: 980px){
     .nav-links{display:none;}
     .hamburger{display:flex;}
+    .nav-join-btn{display:none;}
     .stats-grid{grid-template-columns:repeat(3,1fr);}
     .stat:nth-child(3n){border-right:none;}
     .stat{border-bottom:1px solid var(--paper-12);padding-bottom:26px;}
@@ -702,8 +714,28 @@ body{
     .stats-grid{grid-template-columns:repeat(2,1fr);}
     .stat:nth-child(2n){border-right:none;}
     .hero-foot{flex-direction:column;align-items:flex-start;gap:24px;}
+    .hero-foot .scroll-cue{align-self:flex-end;}
     .hero{min-height:auto;}
-    .hero-inner{padding:32px 0 40px;}
+    .hero-inner{padding:32px 26px 40px;}
+
+    /* -- nav: slightly smaller logo so it doesn't crowd the hamburger -- */
+    .logo{width:130px;height:30px;}
+    .logo-img{height:30px;}
+    header.scrolled .logo-img{height:26px;}
+
+    /* -- hero heading: dedicated mobile size, not the desktop clamp() floor -- */
+    .hero h1{font-size:clamp(36px,9vw,42px);line-height:1.08;}
+
+    /* -- hero description: smaller, more comfortable line-height -- */
+    .hero .lead{font-size:clamp(16px,4vw,18px);line-height:1.55;margin:16px 0 24px;}
+
+    /* -- category pills (Discover/Experience/Lead/Impact): smaller footprint -- */
+    .hero-tagwords{gap:8px;margin-bottom:20px;}
+    .hero-tagwords span{font-size:10.5px;padding:6px 12px;}
+
+    /* -- CTA buttons: comfortable ~46-50px tap height -- */
+    .hero-ctas{gap:12px;}
+    .hero-ctas .btn{padding:15px 24px;justify-content:center;}
     .section{padding:56px 0;}
     .section.tight{padding:48px 0;}
     .section-head{margin-bottom:36px;padding-left:20px;}
@@ -719,6 +751,14 @@ body{
     .final-cta{padding:80px 0;}
     footer{padding:48px 0 24px;}
     .foot-grid{grid-template-columns:1fr;padding-bottom:32px;gap:28px;}
+  }
+
+  /* -- extra-small phones: tighten the heading a bit further, stack CTAs full-width -- */
+  @media (max-width: 480px){
+    .hero h1{font-size:clamp(32px,9.5vw,38px);}
+    .hero-inner{padding:28px 22px 36px;}
+    .hero-ctas{flex-direction:column;}
+    .hero-ctas .btn{width:100%;}
   }
 
   @media (prefers-reduced-motion: reduce){
